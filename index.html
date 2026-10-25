@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Value Stream Studio</title>
+  <meta name="description" content="Live, interactive value stream map: takt, line balance, true value-added PCE, and a current vs future state flow simulation.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="titleblock">
+    <div class="tb-name">
+      <div class="eyebrow">Lean · Current and future state</div>
+      <h1>Value Stream <span>Map</span></h1>
+      <p class="tb-sub">Machined steel flange, raw bar stock to OEM dock. Parts flow live: watch queues build at the constraint, machines go down, and the future-state pull system cap WIP. Tap any process to edit it.</p>
+    </div>
+    <div class="tb-cells">
+      <div><b>Dwg no.</b>VSM-FL40-01</div>
+      <div><b>Rev</b><span id="tbRev">A</span></div>
+      <div><b>Product family</b>Flange, Ø40 mm</div>
+      <div><b>Date</b>2026-10-25</div>
+      <div><b>Drawn</b>M. Faulkner</div>
+      <div><b>Sheet</b><span id="tbSheet">1 of 2</span></div>
+    </div>
+  </header>
+
+  <section class="controls" aria-label="Map settings">
+    <div class="ctl"><span class="lbl">State</span>
+      <div class="seg" id="segState">
+        <button type="button" data-v="current" aria-pressed="true">Current</button>
+        <button type="button" data-v="future" aria-pressed="false">Future</button>
+      </div>
+    </div>
+    <div class="ctl"><span class="lbl">PCE time basis</span>
+      <div class="seg" id="segBasis">
+        <button type="button" data-v="work" aria-pressed="true">Working time</button>
+        <button type="button" data-v="cal" aria-pressed="false">Calendar 24 h</button>
+      </div>
+    </div>
+    <div class="ctl"><label for="gDemand">Demand pcs/day</label><input type="number" id="gDemand" min="1" step="10"></div>
+    <div class="ctl"><label for="gShifts">Shifts</label><input type="number" id="gShifts" min="1" max="3" step="1"></div>
+    <div class="ctl"><label for="gMin">Net min/shift</label><input type="number" id="gMin" min="60" max="600" step="5"></div>
+    <button type="button" class="reset" id="btnReset">Reset data</button>
+  </section>
+
+  <section class="kpis" id="kpis" aria-label="Key metrics"></section>
+
+  <section class="sheet" aria-label="Value stream map">
+    <div class="sheet-head">
+      <h2 id="mapTitle">Current state</h2>
+      <div class="legend">
+        <span><i class="lg-push"></i>Push</span>
+        <span><i class="lg-tri"></i>Inventory (pcs · days)</span>
+        <span><i class="lg-zig"></i>Electronic info</span>
+        <span>Eff C/T = C/T ÷ (stations × uptime)</span>
+      </div>
+    </div>
+    <div class="livebar" id="livebar">
+      <button type="button" class="playbtn" id="btnPlay">Pause</button>
+      <div class="seg small" id="segSpeed">
+        <button type="button" data-v="60" aria-pressed="false">60×</button>
+        <button type="button" data-v="240" aria-pressed="true">240×</button>
+        <button type="button" data-v="900" aria-pressed="false">900×</button>
+      </div>
+      <div class="livestats" id="liveStats"></div>
+    </div>
+    <div class="mapscroll"><svg id="map" viewBox="0 0 1200 540" role="img" aria-label="Value stream map diagram"></svg></div>
+    <div class="scrollhint">Swipe sideways to see the full map.</div>
+  </section>
+
+  <section class="analysis">
+    <div class="panel chart">
+      <h3>Line balance <small>Effective cycle time vs takt, seconds per piece</small></h3>
+      <div class="inner"><svg id="balance" viewBox="0 0 600 290" role="img" aria-label="Line balance chart"></svg></div>
+    </div>
+    <div class="panel">
+      <h3>Findings <small id="findSub">Computed from the data</small></h3>
+      <div class="inner"><ul class="findings" id="findings"></ul></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h3>Process data <small>C/T in seconds per piece · C/O in minutes · WIP is the queue in front of the process</small></h3>
+    <div class="editor" id="editor"></div>
+  </section>
+
+  <section class="panel">
+    <h3>Method</h3>
+    <div class="inner notes">
+      <p><b>Takt</b> is net available time per day divided by daily demand. Any process whose effective cycle time is above takt cannot keep up, regardless of how much WIP sits in front of it.</p>
+      <p><b>Inventory days</b> are WIP divided by daily demand. Lead time is their sum plus processing time. In the current state that queue time is almost all of it.</p>
+      <p><b>Value-added</b> counts only steps that change the part's form or fit. Receiving, inspection, packing and shipping are necessary but non-value-added. Toggle VA on any card to test a different rule.</p>
+      <p><b>PCE</b> is value-added time over lead time. Working-time basis uses net shift time per day; the calendar basis uses 24 h and gives the lower number most posts quote.</p>
+    </div>
+  </section>
+</div>
+
+<script src="js/vsm.js"></script>
+</body>
+</html>
