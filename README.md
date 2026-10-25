@@ -4,6 +4,8 @@ A live, interactive value stream map (VSM) that runs in the browser. Parts flow 
 
 Built as a teaching and analysis tool for lean manufacturing. It fixes the common mistakes in "infographic" VSMs: no takt time, cycle times that can't meet demand, and value-added time inflated by counting every step.
 
+[**https://marusfaulkner.github.io/value-stream-map/**](https://marusfaulkner.github.io/value-stream-map/)
+
 ![Current state map, live simulation](docs/screenshot-current.png)
 
 ## Features
